@@ -1,6 +1,6 @@
-from aocd import get_data
 from ast import literal_eval
 from copy import deepcopy
+from aocd import get_data
 
 data = get_data(day=24, year=2020).splitlines()
 vectors = {"e": (2, 0), "ne": (1, -1), "nw": (-1, -1), "w": (-2, 0), "sw": (-1, 1), "se": (1, 1)}
@@ -8,41 +8,41 @@ floor = {}
 
 for line in data:
 	direction = ""
-	currentLocation = [0, 0]
+	current_location = [0, 0]
 	for char in line:
 		if direction + char in vectors:
 			vector = vectors[direction + char]
-			currentLocation[0] += vector[0]
-			currentLocation[1] += vector[1]
+			current_location[0] += vector[0]
+			current_location[1] += vector[1]
 			direction = ""
-			if repr(currentLocation) not in floor:
-				floor[repr(currentLocation)] = False
+			if repr(current_location) not in floor:
+				floor[repr(current_location)] = False
 		else:
 			direction += char
 
-	floor[repr(currentLocation)] = not floor[repr(currentLocation)]
+	floor[repr(current_location)] = not floor[repr(current_location)]
 
 print(sum(value for value in floor.values()))
 
 for day in range(101):
 	print(f"Day: {day}", end='\r')
-	floorCopy = deepcopy(floor)
+	floor_copy = deepcopy(floor)
 	for tile in floor:
-		x, y = literal_eval(tile) 
-		adjacentCoordinates = [repr([x + vector[0], y + vector[1]]) for vector in vectors.values()]
+		x, y = literal_eval(tile)
+		adjacent_coordinates = [repr([x + vector[0], y + vector[1]]) for vector in vectors.values()]
 
-		adjacentsTiles = []
-		for coordinate in adjacentCoordinates:
+		adjacents_tiles = []
+		for coordinate in adjacent_coordinates:
 			if coordinate not in floor:
-				floorCopy[coordinate] = False
+				floor_copy[coordinate] = False
 			else:
-				adjacentsTiles.append(floor[coordinate])
+				adjacents_tiles.append(floor[coordinate])
 
 
-		if day > 0 and floor[tile] and not (0 < adjacentsTiles.count(True) < 3):
-			floorCopy[tile] = False
-		elif day > 0 and (not floor[tile]) and adjacentsTiles.count(True) == 2:
-			floorCopy[tile] = True
+		if day > 0 and floor[tile] and not 0 < adjacents_tiles.count(True) < 3:
+			floor_copy[tile] = False
+		elif day > 0 and (not floor[tile]) and adjacents_tiles.count(True) == 2:
+			floor_copy[tile] = True
 
-	floor = floorCopy
+	floor = floor_copy
 print(sum(value for value in floor.values()))

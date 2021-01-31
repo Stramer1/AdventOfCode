@@ -1,57 +1,57 @@
 from aocd import get_data
-from intcode import runProgram
+from intcode import run_program
 
 program = list(map(int, get_data(day=19, year=2019).split(',')))
-totalPulled = counter = xTurn = cornersIndex = previousOutput = foundBeam = 0
+total_pulled = counter = x_turn = corners_index = previous_output = found_beam = 0
 corners = coordinate = [500, 0]
-answerNotFound = True
+answer_not_found = True
 size = 50
 
-def processInput1():
-	global counter, xTurn
-	xTurn = not xTurn
-	return counter // size if xTurn else counter % size
+def process_input1():
+	global counter, x_turn
+	x_turn = not x_turn
+	return counter // size if x_turn else counter % size
 
-def processOutput1(output):
-	global totalPulled, counter
+def process_output1(output):
+	global total_pulled, counter
 	counter += 1
-	totalPulled += output
+	total_pulled += output
 
 while counter < size * size:
-	runProgram(program, processInput1, processOutput1)
+	run_program(program, process_input1, process_output1)
 
-print(totalPulled)
+print(total_pulled)
 
-def calculateOpositeCorner(coordinate):
+def calculate_oposite_corner(coordinate):
 	return  [coordinate[0] + 99, coordinate[1] - 99] + coordinate
 
-def processInput2():
-	global corners, cornersIndex
-	cornersIndex += 1
-	return corners[cornersIndex - 1]
+def process_input2():
+	global corners, corners_index
+	corners_index += 1
+	return corners[corners_index - 1]
 
-def processOutput2(output):
-	global previousOutput, cornersIndex, coordinate, corners, answerNotFound, foundBeam
-	
-	if cornersIndex == len(corners):
-		if not foundBeam and output == 0:
+def process_output2(output):
+	global previous_output, corners_index, coordinate, corners, answer_not_found, found_beam
+
+	if corners_index == len(corners):
+		if not found_beam and output == 0:
 			corners = coordinate = [coordinate[0], coordinate[1] + 1]
-		elif not foundBeam and output == 1:
-			foundBeam = True
+		elif not found_beam and output == 1:
+			found_beam = True
 			corners = coordinate = [coordinate[0], coordinate[1] + 1]
-		elif foundBeam and output == 0:
+		elif found_beam and output == 0:
 			coordinate = [coordinate[0] + 1, coordinate[1] - 2]
-			corners = calculateOpositeCorner(coordinate)
-		elif foundBeam and previousOutput == 0 and output == 1:
+			corners = calculate_oposite_corner(coordinate)
+		elif found_beam and previous_output == 0 and output == 1:
 			coordinate = [coordinate[0], coordinate[1] + 1]
-			corners = calculateOpositeCorner(coordinate)
-		elif foundBeam and output == previousOutput == 1:
-			answerNotFound = False
-		cornersIndex = previousOutput = 0
+			corners = calculate_oposite_corner(coordinate)
+		elif found_beam and output == previous_output == 1:
+			answer_not_found = False
+		corners_index = previous_output = 0
 	else:
-		previousOutput = output
+		previous_output = output
 
-while answerNotFound:
-	runProgram(program, processInput2, processOutput2)
+while answer_not_found:
+	run_program(program, process_input2, process_output2)
 
 print(coordinate[0] * 10000 + coordinate[1] - 99)

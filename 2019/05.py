@@ -2,9 +2,10 @@ from aocd import get_data
 
 program = list(map(int, get_data(day=5, year=2019).split(',')))
 
-programOutput = pointer = 0
+program_output = pointer = 0
+input_value = 1
 
-while program[pointer] != 99 and not programOutput:
+while program[pointer] != 99 and not program_output:
 	instruction = program[pointer]%100
 	param1 = pointer + 1 if program[pointer]//100%10 else program[pointer + 1]
 	param2 = pointer + 2 if program[pointer]//1000 else program[pointer + 2]
@@ -17,10 +18,10 @@ while program[pointer] != 99 and not programOutput:
 		program[param3] = program[param1] * program[param2]
 		pointer += 4
 	elif instruction == 3:
-		program[param1] = int(input())
+		program[param1] = input_value
 		pointer += 2
 	elif instruction == 4:
-		programOutput = program[param1]
+		program_output = program[param1]
 		pointer += 2
 	elif instruction == 5:
 		if program[param1]:
@@ -44,4 +45,4 @@ while program[pointer] != 99 and not programOutput:
 		else:
 			program[param3] = 0
 		pointer += 4
-print(programOutput)
+print(program_output)

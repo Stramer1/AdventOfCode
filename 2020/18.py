@@ -4,9 +4,9 @@ data = get_data(day=18, year=2020).splitlines()
 
 def evaluate1(line):
 	while isinstance(line, str) and "(" in line:
-		lastIndex = line.find(")")
-		firstIndex = line[:lastIndex].rfind("(")
-		line = line[:firstIndex] + str(evaluate1(line[firstIndex+1:lastIndex])) + line[lastIndex+1:]
+		last_index = line.find(")")
+		first_index = line[:last_index].rfind("(")
+		line = line[:first_index] + str(evaluate1(line[first_index+1:last_index])) + line[last_index+1:]
 	while isinstance(line, str) and ("*" in line or "+" in line):
 		index = max(line.rfind("*"), line.rfind("+"))
 		if index == line.rfind("*"):
@@ -17,9 +17,9 @@ def evaluate1(line):
 
 def evaluate2(line):
 	while isinstance(line, str) and "(" in line:
-		lastIndex = line.find(")")
-		firstIndex = line[:lastIndex].rfind("(")
-		line = line[:firstIndex] + str(evaluate2(line[firstIndex+1:lastIndex])) + line[lastIndex+1:]
+		last_index = line.find(")")
+		first_index = line[:last_index].rfind("(")
+		line = line[:first_index] + str(evaluate2(line[first_index+1:last_index])) + line[last_index+1:]
 	while isinstance(line, str) and "*" in line:
 		index = line.find("*")
 		line = evaluate2(line[:index]) * evaluate2(line[index+1:])

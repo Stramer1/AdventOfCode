@@ -10,23 +10,22 @@ def read(program, position):
 		program += [0] * (position - len(program) + 1)
 	return program[position]
 
-def getParameter(program, pointer, parameter, relativeBase):
+def get_parameter(program, pointer, parameter, relative_base):
 	if read(program, pointer)//10**(parameter+1)%10 == 1:
 		return pointer + parameter
-	elif read(program, pointer)//10**(parameter+1)%10 == 2:
-		return read(program, pointer + parameter) + relativeBase
-	else:
-		return read(program, pointer + parameter)
+	if read(program, pointer)//10**(parameter+1)%10 == 2:
+		return read(program, pointer + parameter) + relative_base
+	return read(program, pointer + parameter)
 
-def runProgram(program, processInput, processOutput, condition = lambda: True):
-	pointer = relativeBase = 0
+def run_program(program, process_input, process_output, condition = lambda: True):
+	pointer = relative_base = 0
 	program = deepcopy(program)
-	
+
 	while condition() and read(program, pointer) != 99:
 		instruction = read(program, pointer)%100
-		param1 = getParameter(program, pointer, 1, relativeBase)
-		param2 = getParameter(program, pointer, 2, relativeBase)
-		param3 = getParameter(program, pointer, 3, relativeBase)
+		param1 = get_parameter(program, pointer, 1, relative_base)
+		param2 = get_parameter(program, pointer, 2, relative_base)
+		param3 = get_parameter(program, pointer, 3, relative_base)
 
 		if instruction == 1:
 			write(program, param3, read(program, param1) + read(program, param2))
@@ -35,10 +34,10 @@ def runProgram(program, processInput, processOutput, condition = lambda: True):
 			write(program, param3, read(program, param1) * read(program, param2))
 			pointer += 4
 		elif instruction == 3:
-			write(program, param1, processInput())
+			write(program, param1, process_input())
 			pointer += 2
 		elif instruction == 4:
-			processOutput(read(program, param1))
+			process_output(read(program, param1))
 			pointer += 2
 		elif instruction == 5:
 			if read(program, param1):
@@ -57,7 +56,7 @@ def runProgram(program, processInput, processOutput, condition = lambda: True):
 			write(program, param3, 1 if read(program, param1) == read(program, param2) else 0)
 			pointer += 4
 		elif instruction == 9:
-			relativeBase += read(program, param1)
+			relative_base += read(program, param1)
 			pointer += 2
 		else:
 			print("Error")

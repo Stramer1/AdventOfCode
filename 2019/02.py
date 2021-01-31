@@ -1,9 +1,9 @@
-from aocd import get_data
 from copy import deepcopy
+from aocd import get_data
 
-program = list(map(int, get_data(day=2, year=2019).split(',')))
+data = list(map(int, get_data(day=2, year=2019).split(',')))
 
-def runProgram(program, noun, verb):
+def run_program(program: list, noun: int, verb: int):
 	program[1] = noun
 	program[2] = verb
 	pointer = 0
@@ -15,9 +15,9 @@ def runProgram(program, noun, verb):
 		pointer += 4
 	return program[0]
 
-print(runProgram(deepcopy(program), 12, 2))
+print(run_program(deepcopy(data), 12, 2))
 
-for noun in range(100):
-	for verb in range(100):
-		if runProgram(deepcopy(program), noun, verb) == 19690720:
-			print(noun * 100 + verb)
+for n in range(100):
+	for v in range(100):
+		if run_program(deepcopy(data), n, v) == 19690720:
+			print(n * 100 + v)

@@ -1,34 +1,34 @@
-from aocd import get_data
 from re import search
 from re import findall
+from aocd import get_data
 
 data = get_data(day=7, year=2020).splitlines()
 # wavy olive bags contain 1 striped olive bag, 1 dull cyan bag.
 # plaid cyan bags contain no other bags.
 
 rules = []
+# ['wavy beige', [('5', 'muted silver'), ('5', 'pale teal')]]
 for line in data:
 	container = search(r"(.*) bags contain", line).group(1)
 	contents = findall(r"(\d+) (.*?) bag", line)
 	rules.append([container, contents])
 
-# ['wavy beige', [('5', 'muted silver'), ('5', 'pale teal')]]
+looking_for = ["shiny gold"]
+original_length = 0
 
-lookingFor = ["shiny gold"]
-originalLength = 0
-
-while originalLength != len(lookingFor):
-	originalLength = len(lookingFor)
+while original_length != len(looking_for):
+	original_length = len(looking_for)
 	for rule in rules:
-		if rule[-1] != "*" and set(lookingFor).intersection([content[1] for content in rule[1]]):
-			lookingFor.append(rule[0])
+		if rule[-1] != "*" and set(looking_for).intersection([content[1] for content in rule[1]]):
+			looking_for.append(rule[0])
 			rule.append("*")
 
 print(len([rule for rule in rules if rule[-1] == "*"]))
 
-def recursiveSearch(bag):
-	for rule in rules:
-		if rule[0] == bag:
-			return 1 + sum([int(contents[0]) * recursiveSearch(contents[1]) for contents in rule[1]])
+def recursive_search(bag: str):
+	for rul in rules:
+		if rul[0] == bag:
+			return 1 + sum([int(contents[0]) * recursive_search(contents[1]) for contents in rul[1]])
+	return 0
 
-print(recursiveSearch("shiny gold") - 1)
+print(recursive_search("shiny gold") - 1)

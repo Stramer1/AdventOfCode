@@ -1,17 +1,15 @@
-from aocd import get_data
 from re import search
+from aocd import get_data
 
 data = [line.replace("\n", " ") for line in get_data(day=4, year=2020).split("\n\n")]
-# hcl:#fffffd byr:1951 cid:321 iyr:2017 eyr:2022 ecl:brn hgt:62in pid:#6ef4e1
+valid = total_valid = 0
 
-valid = 0
 for passport in data:
-	if "pid:" in passport and "ecl:" in passport and "hcl:" in passport and "hgt:" in passport and "eyr:" in passport and "iyr:" in passport and "byr:" in passport:
-		valid += 1
+	if "pid:" in passport and "ecl:" in passport and "hcl:" in passport:
+		if "hgt:" in passport and "eyr:" in passport and "iyr:" in passport and "byr:" in passport:
+			valid += 1
 print(valid)
 
-
-totalValid = 0
 for passport in data:
 	byr = search(r"byr:(\d{4})\b", passport)
 	iyr = search(r"iyr:(\d{4})\b", passport)
@@ -29,7 +27,7 @@ for passport in data:
 	valid = valid and (hgtcm and 150 <= int(hgtcm.group(1)) <= 193 or hgtin and 59 <= int(hgtin.group(1)) <= 76)
 	valid = valid and ecl.group(1) in ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
 
-	if (valid):
-		totalValid += 1
+	if valid:
+		total_valid += 1
 
-print(totalValid)
+print(total_valid)

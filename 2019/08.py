@@ -1,5 +1,5 @@
-from aocd import get_data
 from textwrap import wrap
+from aocd import get_data
 
 width, height = 25, 6
 layers = wrap(get_data(day=8, year=2019), width * height)

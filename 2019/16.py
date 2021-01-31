@@ -1,35 +1,35 @@
 from aocd import get_data
 
 data = get_data(day=16, year=2019)[:-1]
-digitList = list(map(int, data))
-startingPattern = [0, 1, 0, -1]
+digit_list = list(map(int, data))
+starting_pattern = [0, 1, 0, -1]
 
 for _ in range(100):
-	digitListCopy = []
-	for line in range(len(digitList)):
+	digit_list_copy = []
+	for line in range(len(digit_list)):
 		pattern = []
-		for number in startingPattern:
+		for number in starting_pattern:
 			pattern += (line+1) * [number]
 
 		total = 0
-		for index, value in enumerate(digitList):
+		for index, value in enumerate(digit_list):
 			total += value * pattern[(index+1) % len(pattern)]
-		digitListCopy.append(abs(total)%10)
-	digitList = digitListCopy
+		digit_list_copy.append(abs(total)%10)
+	digit_list = digit_list_copy
 
 
-print("".join(map(str, digitList[:8])))
+print("".join(map(str, digit_list[:8])))
 
 
 data = data * 10000
-digitList = map(int, data[int(data[:7]):][::-1])
+digit_list = map(int, data[int(data[:7]):][::-1])
 
 for _ in range(100):
-	digitListCopy = []
+	digit_list_copy = []
 	total = 0
-	for digit in digitList:
+	for digit in digit_list:
 		total += digit
-		digitListCopy.append(total % 10)
-	digitList = digitListCopy
+		digit_list_copy.append(total % 10)
+	digit_list = digit_list_copy
 
-print("".join(map(str,digitList[::-1][:8])))
+print("".join(map(str,digit_list[::-1][:8])))

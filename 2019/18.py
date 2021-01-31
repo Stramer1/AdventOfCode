@@ -2,12 +2,12 @@ from aocd import get_data
 
 data = get_data(day=18, year=2019).splitlines()
 vectors = [(0, 1), (0, -1), (1, 0), (-1, 0)]
-graph, adjacencyMatrix = {}, {}
-keyList =  []
-startingPoints = []
+graph, adjacency_matrix = {}, {}
+key_list =  []
+starting_points = []
 
 # Only for part 2, comment for part 1
-def changeData(data):
+def change_data(data):
 	for y in range(1, len(data) - 1):
 		for x in range(1, len(data[0]) - 1):
 			if data[y][x] == "@":
@@ -15,33 +15,33 @@ def changeData(data):
 				data[y] = data[y][:x - 1] + "###" + data[y][x + 2:]
 				data[y + 1] = data[y + 1][:x - 1] + "@#@" + data[y + 1][x + 2:]
 				return data
-data = changeData(data)
+data = change_data(data)
 
 
 class Node:
 	def __init__(self, coordinates):
 		self.coordinates = coordinates
 		self.neighbours = []
-		self.wasVisited = False
-		self.distance = self.doorsRequired = self.door = self.key = 0
+		self.was_visited = False
+		self.distance = self.doors_required = self.door = self.key = 0
 
 class Path:
-	def __init__(self, locations, keys, distance, maxKeys):
+	def __init__(self, locations, keys, distance, max_keys):
 		self.locations = locations
-		self.maxKeys = maxKeys
+		self.max_keys = max_keys
 		self.keys = keys
 		self.distance = distance
 
 	def __repr__(self):
 		return repr(self.locations) + repr(self.keys)
 
-	def isCompleted(self):
-		return self.keys == self.maxKeys
+	def is_completed(self):
+		return self.keys == self.max_keys
 
-def keyIsNotInPossession(keys, key):
+def key_is_not_in_possession(keys, key):
 	return int(str(keys), 2) & int(str(key), 2) == 0
 
-def keysUnlockDoors(keys, doors):
+def keys_unlock_doors(keys, doors):
 	return int(str(doors), 2) & int(str(keys), 2) == int(str(doors), 2)
 
 
@@ -53,10 +53,10 @@ for y in range(1, len(data) - 1):
 			graph[repr((x, y))] = node
 
 			if data[y][x] == "@":
-				startingPoints.append(node)
+				starting_points.append(node)
 			elif data[y][x].islower():
 				node.key = data[y][x]
-				keyList.append(node)
+				key_list.append(node)
 			elif data[y][x] != ".":
 				node.door = data[y][x]
 
@@ -66,44 +66,44 @@ for y in range(1, len(data) - 1):
 					node.neighbours.append(graph[repr((x1, y1))])
 					graph[repr((x1, y1))].neighbours.append(node)
 
-# Convert door and key char (a, A) to 10 ** index of the key in keyList, to allow "binary" operations
+# Convert door and key char (a, A) to 10 ** index of the key in key_list, to allow "binary" operations
 for node in graph.values():
 	if node.door:
-		node.door = 10 ** next(i for i, v in enumerate(keyList) if node.door.lower() == v.key)
+		node.door = 10 ** next(i for i, v in enumerate(key_list) if node.door.lower() == v.key)
 
-for i, node in enumerate(keyList):
+for i, node in enumerate(key_list):
 	node.key = 10 ** i
 
-# Create a weighted graph as an adjacencyMatrix where 1 node is 1 key (plus the starting positions)
+# Create a weighted graph as an adjacency_matrix where 1 node is 1 key (plus the starting positions)
 # Weights are the distance + the doors between any two keys
-for key1 in keyList + startingPoints:
-	adjacencyMatrix[key1] = {}
+for key1 in key_list + starting_points:
+	adjacency_matrix[key1] = {}
 
-	for key2 in keyList:
-		adjacencyMatrix[key1][key2] = [-1, float("inf")]
+	for key2 in key_list:
+		adjacency_matrix[key1][key2] = [-1, float("inf")]
 
-	toVisit = [key1]
+	to_visit = [key1]
 
-	while toVisit != []:
-		node = toVisit.pop(0)
-		node.wasVisited = True
+	while to_visit != []:
+		node = to_visit.pop(0)
+		node.was_visited = True
 
-		if node.door and int(str(node.doorsRequired), 2) & int(str(node.door), 2) == 0:
-			node.doorsRequired += node.door
-		
+		if node.door and int(str(node.doors_required), 2) & int(str(node.door), 2) == 0:
+			node.doors_required += node.door
+
 		for neighbour in node.neighbours:
-			if not neighbour.wasVisited:
-				toVisit.append(neighbour)
+			if not neighbour.was_visited:
+				to_visit.append(neighbour)
 				neighbour.distance = node.distance + 1
-				neighbour.doorsRequired = node.doorsRequired
+				neighbour.doors_required = node.doors_required
 
 		if node.key:
-			adjacencyMatrix[key1][node][0] = node.doorsRequired
-			adjacencyMatrix[key1][node][1] = node.distance
+			adjacency_matrix[key1][node][0] = node.doors_required
+			adjacency_matrix[key1][node][1] = node.distance
 
 	for node in graph.values():
-		node.distance = node.doorsRequired = 0
-		node.wasVisited = False
+		node.distance = node.doors_required = 0
+		node.was_visited = False
 
 # Part 1
 # Recursively search for the shortest path as a DFS taking into account the doors
@@ -112,40 +112,40 @@ def visit(point, keys, cache):
 		return cache[repr(point) + repr(keys)]
 
 	minimum = 0
-	for destiny in adjacencyMatrix[point]:
-		if destiny != point and keyIsNotInPossession(keys, destiny.key) and keysUnlockDoors(keys, adjacencyMatrix[point][destiny][0]):
-			result = visit(destiny, keys + destiny.key, cache) + adjacencyMatrix[point][destiny][1]
+	for destiny in adjacency_matrix[point]:
+		if destiny != point and key_is_not_in_possession(keys, destiny.key) and keys_unlock_doors(keys, adjacency_matrix[point][destiny][0]):
+			result = visit(destiny, keys + destiny.key, cache) + adjacency_matrix[point][destiny][1]
 			minimum = result if minimum == 0 else min(minimum, result)
 	cache[repr(point) + repr(keys)] = minimum
 	return minimum
 
-print(visit(startingPoints[0], 0, {}))
+print(visit(starting_points[0], 0, {}))
 
 # Part 2
 # Basically the same as the above without recursion
-maxKeys = sum(10**i for i in range(len(keyList)))
-paths = [Path(startingPoints, 0, 0, maxKeys)]
+max_keys = sum(10**i for i in range(len(key_list)))
+paths = [Path(starting_points, 0, 0, max_keys)]
 cache = {}
-minimumDistance = float("inf")
+minimum_distance = float("inf")
 
 while paths != []:
 	path = paths.pop(-1)
-	print(minimumDistance, len(paths), "    ", end="\r")
+	print(minimum_distance, len(paths), "    ", end="\r")
 
-	if path.isCompleted():
-		minimumDistance = min(path.distance, minimumDistance)
-	elif path.distance >= minimumDistance:
+	if path.is_completed():
+		minimum_distance = min(path.distance, minimum_distance)
+	elif path.distance >= minimum_distance:
 		continue
 	elif repr(path) not in cache or cache[repr(path)] > path.distance:
 		cache[repr(path)] = path.distance
 
 		for i in range(4):
-			for destiny in adjacencyMatrix[path.locations[i]]:
+			for destiny in adjacency_matrix[path.locations[i]]:
 				if destiny != path.locations[i] and \
-					keyIsNotInPossession(path.keys, destiny.key) and \
-					keysUnlockDoors(path.keys, adjacencyMatrix[path.locations[i]][destiny][0]):
+					key_is_not_in_possession(path.keys, destiny.key) and \
+					keys_unlock_doors(path.keys, adjacency_matrix[path.locations[i]][destiny][0]):
 					paths.append(Path(path.locations[:i] + [destiny] + path.locations[i+1:],
 						path.keys + destiny.key,
-						path.distance + adjacencyMatrix[path.locations[i]][destiny][1], maxKeys))
+						path.distance + adjacency_matrix[path.locations[i]][destiny][1], max_keys))
 
-print(minimumDistance)
+print(minimum_distance)

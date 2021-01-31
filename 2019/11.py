@@ -1,22 +1,22 @@
 from aocd import get_data
-from intcode import runProgram
+from intcode import run_program
 
 program = list(map(int, get_data(day=11, year=2019).split(',')))
 panels = {}
 location = [0, 0]
-outputIsColor = True
+output_is_color = True
 looking = (0, -1)
 panels[str(location)] = 1
 
-def processInput():
+def process_input():
 	global panels, location
 	if str(location) not in panels:
 		panels[str(location)] = 0
 	return panels[str(location)]
 
-def processOutput(output):
-	global panels, location, outputIsColor, looking
-	if outputIsColor:
+def process_output(output):
+	global panels, location, output_is_color, looking
+	if output_is_color:
 		panels[str(location)] = output
 	elif output:
 		looking = (-looking[1], looking[0])
@@ -24,9 +24,9 @@ def processOutput(output):
 	else:
 		looking = (looking[1], - looking[0])
 		location = [location[0] + looking[0], location[1] + looking[1]]
-	outputIsColor = not outputIsColor
+	output_is_color = not output_is_color
 
-intcode.runProgram(program, processInput, processOutput)
+run_program(program, process_input, process_output)
 
 panels2 = []
 print(len(panels))

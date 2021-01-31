@@ -20,13 +20,12 @@ while dic[planet] not in visited:
 
 total += visited.index(dic[planet])
 
-def calculateOrbit(planet):
-	if type(dic[planet]) == int:
+def calculate_orbit(planet):
+	if isinstance(dic[planet], int):
 		return dic[planet]
-	else:
-		orbits = 1 + calculateOrbit(dic[planet])
-		dic[planet] = orbits
-		return orbits
+	orbits = 1 + calculate_orbit(dic[planet])
+	dic[planet] = orbits
+	return orbits
 
-print(sum([calculateOrbit(planet) for planet in dic]))
+print(sum([calculate_orbit(planet) for planet in dic]))
 print(total)

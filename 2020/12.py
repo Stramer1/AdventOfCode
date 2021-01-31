@@ -7,7 +7,6 @@ facing = 0
 coordinates = [0, 0]
 
 # Part 1
-
 for direction in data:
 	if direction[0] in directions:
 		coordinates[0] += directions[direction[0]][0] * direction[1]
@@ -23,7 +22,6 @@ for direction in data:
 print(abs(coordinates[0]) + abs(coordinates[1]))
 
 # Part 2
-
 coordinates = [0, 0]
 waypoint = [10, 1]
 

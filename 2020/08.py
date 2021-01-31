@@ -1,44 +1,34 @@
-from aocd import get_data
 from copy import deepcopy
+from aocd import get_data
 
-program = [[command[0], int(command[1])] for command in list(map(str.split, get_data(day=8, year=2020).splitlines()))]
-programCopy = deepcopy(program)
+data = [[c[0], int(c[1])] for c in list(map(str.split, get_data(day=8, year=2020).splitlines()))]
 
-acumulator = pointer = 0
-currentCommand = program[pointer]
-
-while len(currentCommand) == 2:
-	if currentCommand[0] == "acc":
-		acumulator += currentCommand[1]
-
-	pointer += currentCommand[1] if currentCommand[0] == "jmp" else 1
-	currentCommand.append("*")
-	currentCommand = program[pointer]
-
-print(acumulator)
-
-def runProgram(program, mutation):
-	program[mutation][0] = "jmp" if program[mutation][0] == "nop" else "nop" 
+def run_program(program: list, mutation: int):
+	if mutation > -1:
+		program[mutation][0] = "jmp" if program[mutation][0] == "nop" else "nop"
 	acumulator = pointer = 0
-	currentCommand = program[pointer]
+	current_command = program[pointer]
 
-	while len(currentCommand) == 2:
-		if currentCommand[0] == "acc":
-			acumulator += currentCommand[1]
+	while len(current_command) == 2:
+		if current_command[0] == "acc":
+			acumulator += current_command[1]
 
-		pointer += currentCommand[1] if currentCommand[0] == "jmp" else 1
+		pointer += current_command[1] if current_command[0] == "jmp" else 1
 
 		if pointer == len(program) - 1:
 			return acumulator
 
-		currentCommand.append("*")
-		currentCommand = program[pointer]
+		current_command.append("*")
+		current_command = program[pointer]
 
-	return False
+	return False or acumulator
 
+# Part 1
+print(run_program(deepcopy(data), -1))
 
-for mutation in range(len(program)):
-	result = runProgram(deepcopy(programCopy), mutation)
+# Part 2
+for m in range(len(data)):
+	result = run_program(deepcopy(data), m)
 	if result:
 		print(result)
 		break

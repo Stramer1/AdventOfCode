@@ -2,11 +2,11 @@ from aocd import get_data
 
 data = get_data(day=3, year=2019).splitlines()
 
-def calculatePath(directions):
+def calculate_path(directions):
 	path = []
 	location = [0, 0]
 	for direction in directions:
-		for i in range(int(direction[1:])):
+		for _ in range(int(direction[1:])):
 			if direction[0] == "R":
 				location[0] += 1
 			elif direction[0] == "L":
@@ -18,9 +18,9 @@ def calculatePath(directions):
 			path.append(tuple(location))
 	return path
 
-wirePath1 = calculatePath(data[0].split(","))
-wirePath2 = calculatePath(data[1].split(","))
-intersections = set(wirePath1).intersection(wirePath2)
+wire_path1 = calculate_path(data[0].split(","))
+wire_path2 = calculate_path(data[1].split(","))
+intersections = set(wire_path1).intersection(wire_path2)
 
 print(min(map(lambda e : abs(e[0]) + abs(e[1]), intersections)))
-print(min(map(lambda e : 2 + wirePath1.index(e) + wirePath2.index(e), intersections)))
+print(min(map(lambda e : 2 + wire_path1.index(e) + wire_path2.index(e), intersections)))

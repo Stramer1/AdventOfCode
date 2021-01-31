@@ -1,13 +1,12 @@
 from aocd import get_data
-from intcode import runProgram
+from intcode import run_program
 
 program = list(map(int, get_data(day=9, year=2019).split(',')))
-pointer = relativeBase = 0
 
-def processInput():
+def process_input():
 	return int(input())
 
-def processOutput(output):
+def process_output(output):
 	print(output)
 
-runProgram(program, processInput, processOutput)
+run_program(program, process_input, process_output)

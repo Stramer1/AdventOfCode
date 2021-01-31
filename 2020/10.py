@@ -17,14 +17,13 @@ print(ones * threes)
 # [0, 1] = 1
 # [0, 1, 2] = 2 = [0, 2] + [0, 1, 2]
 # [0, 1, 2, 3] = 4 = [0, 1, 2, 3] + [0, 1, 3] + [0, 2, 3] + [0, 3]
-# [0, 1, 2, 4] = 3 = [0, 1, 4] + [0, 2, 4] + [0, 1, 2, 4] 
-def ways(interval):
+# [0, 1, 2, 4] = 3 = [0, 1, 4] + [0, 2, 4] + [0, 1, 2, 4]
+def ways(interval: list):
 	if len(interval) == 2:
 		return 1
-	elif interval[2] - interval[0] <= 3:
+	if interval[2] - interval[0] <= 3:
 		return ways(interval[1:]) + ways([interval[0]] + interval[2:])
-	else:
-		return ways(interval[1:])
+	return ways(interval[1:])
 
 total = 1
 mandatory = 0

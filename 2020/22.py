@@ -1,5 +1,5 @@
-from aocd import get_data
 from collections import deque
+from aocd import get_data
 
 data = [list(map(int, player.splitlines()[1:])) for player in get_data(day=22, year=2020).split("\n\n")]
 player1, player2 = deque(data[0]), deque(data[1])
@@ -9,9 +9,8 @@ def play(player1, player2):
 	while len(player1) != 0 and len(player2) != 0:
 		if repr(player1) + repr(player2) in states:
 			return 1
-		else:
-			states.append(repr(player1) + repr(player2))
-			
+		states.append(repr(player1) + repr(player2))
+
 		a, b = player1.popleft(), player2.popleft()
 
 		if len(player1) >= a and len(player2) >= b:

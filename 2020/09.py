@@ -14,8 +14,7 @@ while not vulnerability:
 
 print(vulnerability)
 
-for lower in range(len(data)):
-	total = data[lower]
+for lower, total in enumerate(data):
 	for upper in range(lower + 1, len(data)):
 		total += data[upper]
 		if total == vulnerability:
